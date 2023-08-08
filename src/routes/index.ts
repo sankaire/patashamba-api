@@ -1,5 +1,5 @@
 import { Router } from "express";
-import pataShamba from "../controller";
+import pataShamba from "../controller/index.js";
 
 const route = Router();
 

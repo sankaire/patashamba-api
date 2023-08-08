@@ -1,5 +1,5 @@
-import { ILand } from "../interface";
-import Land from "../models/land";
+import { ILand } from "../interface/index.js";
+import Land from "../models/land.js";
 
 const pataShambaService = {
   api: {},
