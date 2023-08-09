@@ -19,6 +19,10 @@ const tenantSchema = new Schema<ITenant>(
       type: String,
       required: true,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: true,

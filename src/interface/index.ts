@@ -4,6 +4,7 @@ export interface ITenant {
   phone: string;
   country: string;
   password: string;
+  isAdmin: boolean;
 }
 export interface ILand {
   phone: string;
@@ -21,4 +22,9 @@ export interface ILand {
       ward: string;
     };
   };
+}
+export interface IAdmin {
+  userName: string;
+  email: string;
+  password: string;
 }
