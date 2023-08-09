@@ -2,6 +2,7 @@ import { compare } from "bcrypt";
 import { IAdmin, ILand, ITenant } from "../interface/index.js";
 import Admin from "../models/admin.js";
 import Land from "../models/land.js";
+import at from "../config/at.js";
 
 const pataShambaService = {
   api: {
@@ -86,13 +87,17 @@ const pataShambaService = {
       if (!land.success) {
         return { success: false, message: "Land not found", data: null };
       }
-      const phoneNumber = land.data?.phone;
+      const phoneNumber = land.data?.phone!;
+      const name = land.data?.ownerName;
       await Land.findOneAndUpdate(
         { _id: id },
         { $set: { status: "true" } },
         { new: true }
       );
-      //TODO:send sms
+      await at.client.sendSms({
+        to: phoneNumber,
+        message: `Habari ${name}. Nakufahamisha kwamba ardhi yako imeidhinishwa kwa ajili ya kuorodheshwa kwenye jukwaa na sasa watu wanaweza kukodisha wakati wowote. `,
+      });
       return {
         success: true,
         message: "Land approved for listing",
@@ -104,9 +109,13 @@ const pataShambaService = {
       if (!land.success) {
         return { success: false, message: "Land not found", data: null };
       }
-      const phoneNumber = land.data?.phone;
+      const phoneNumber = land.data?.phone!;
+      const name = land.data?.ownerName;
       await Land.findOneAndRemove({ _id: id });
-      //TODO:send sms
+      await at.client.sendSms({
+        to: phoneNumber,
+        message: `Habari ${name}. Nachukua nafasi hii kukujulisha kwamba ardhi yako haikupitishwa kwa ajili ya kuorodheshwa kwenye jukwaa, na kwa sasa watu hawawezi kukodisha. `,
+      });
       return {
         success: true,
         message: "Land removed from listing",
