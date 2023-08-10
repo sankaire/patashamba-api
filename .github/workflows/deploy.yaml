@@ -23,15 +23,13 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - run: docker build --tag patashamba/api:v1 .
-    - name: Push to ECR
-      id: ecr
-      uses: jwalton/gh-ecr-push@v1
-      with:
-        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        region: eu-west-3
-        image: my-image:v1
+    - name: Build and Push Docker Image
+      env:
+        ECR_REGISTRY: 173130437624.dkr.ecr.eu-west-3.amazonaws.com/patashamba
+        IMAGE_NAME: patashamba
+      run: |
+        docker build -t $ECR_REGISTRY/$IMAGE_NAME:$GITHUB_SHA .
+        docker push $ECR_REGISTRY/$IMAGE_NAME:$GITHUB_SHA
   # terraform:
   #   name:  Terraform
   #   runs-on: ubuntu-latest
