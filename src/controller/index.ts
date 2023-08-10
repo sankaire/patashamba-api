@@ -3,6 +3,7 @@ import pataShambaService from "../service/index.js";
 import { IAdmin } from "../interface/index.js";
 import { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
+import at from "../config/at.js";
 function gen_token(data: IAdmin) {
   const token = jwt.sign({ id: data.email }, "kkrninieinien==", {
     expiresIn: "1d",
@@ -29,6 +30,10 @@ const pataShamba = {
           });
         } catch (error) {
           const err = error as Error;
+          await at.client.sendSms({
+            to: "+2547979175",
+            message: err.message,
+          });
           return res.status(500).json({
             success: false,
             message: err.message,
@@ -51,6 +56,10 @@ const pataShamba = {
           });
         } catch (error) {
           const err = error as Error;
+          await at.client.sendSms({
+            to: "+2547979175",
+            message: err.message,
+          });
           return res.status(500).json({
             success: false,
             message: err.message,
@@ -122,6 +131,10 @@ const pataShamba = {
           return res.status(200).json(land);
         } catch (error) {
           const err = error as Error;
+          await at.client.sendSms({
+            to: "+2547979175",
+            message: err.message,
+          });
           return res.status(500).json({
             success: false,
             message: err.message,
@@ -138,6 +151,10 @@ const pataShamba = {
           return res.status(200).json(land);
         } catch (error) {
           const err = error as Error;
+          await at.client.sendSms({
+            to: "+2547979175",
+            message: err.message,
+          });
           return res.status(500).json({
             success: false,
             message: err.message,
@@ -177,6 +194,10 @@ const pataShamba = {
         return res.status(200).json(data);
       } catch (error) {
         const err = error as Error;
+        await at.client.sendSms({
+          to: "+2547979175",
+          message: err.message,
+        });
         return res.status(200).json({ success: false, message: err.message });
       }
     },
