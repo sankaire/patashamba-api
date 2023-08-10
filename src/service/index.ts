@@ -129,6 +129,10 @@ const pataShambaService = {
       if (!land) {
         return { success: false, message: "Data not saved", data: null };
       }
+      await at.client.sendSms({
+        to: land.phone,
+        message: `Asante kwa kujiandikisha, maombi yako yatakaguliwa hivi punde. Wasiliana na 0794979175 kwa msaada`,
+      });
       return { success: true, message: "Data saved", data };
     },
   },
