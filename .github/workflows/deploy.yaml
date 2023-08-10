@@ -51,28 +51,17 @@ jobs:
         terraform_wrapper: false
         terraform_version: 0.14.10
 
-    - name: Setup Terraform backend variables
-      working-directory: ./deploy
-      id: backend
-      run: |-
-        cat > backend.tfvars <<EOF
-        access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-        secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        EOF
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init --backend-config="backend.tfvars"
-
-    - name: Setup Terraform variables
-      working-directory: ./deploy
-      id: vars
-      run: |-
-        cat > pipeline.tfvars <<EOF
-        access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-        secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        EOF
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform init
 
     - name: Terraform Apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       id: apply
       run: |
         terraform apply --auto-approve --var-file=pipeline.tfvars
