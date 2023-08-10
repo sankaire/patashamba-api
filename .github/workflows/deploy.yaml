@@ -23,7 +23,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - run: docker build --tag my-image:v1 .
+    - run: docker build --tag patashamba/api:v1 .
     - name: Push to ECR
       id: ecr
       uses: jwalton/gh-ecr-push@v1
