@@ -62,7 +62,7 @@ jobs:
       run: terraform init --backend-config="backend.tfvars"
 
     - name: Setup Terraform variables
-      working-directory: ./terraform
+      working-directory: ./deploy
       id: vars
       run: |-
         cat > pipeline.tfvars <<EOF
