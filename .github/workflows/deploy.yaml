@@ -64,4 +64,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       id: apply
       run: |
-        terraform apply --auto-approve --var-file=pipeline.tfvars
+        terraform apply --auto-approve
