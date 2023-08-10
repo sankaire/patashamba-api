@@ -28,50 +28,49 @@ jobs:
         ECR_REGISTRY: 173130437624.dkr.ecr.eu-west-3.amazonaws.com/patashamba
         IMAGE_NAME: patashamba
       run: |
-        docker build -t public.ecr.aws/g5p0u0h0/patashamba:latest .
-        docker push public.ecr.aws/g5p0u0h0/patashamba:latest
-  # terraform:
-  #   name:  Terraform
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       shell: bash
-  #       working-directory: ./deploy
+        echo pushing to ECR
+  terraform:
+    name:  Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./deploy
 
-  #   steps:
-  #   # Checkout the repository to the GitHub Actions runner
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #   # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-  #   - name: Setup Terraform
-  #     uses: hashicorp/setup-terraform@v1
-  #     with:
-  #       cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-  #       terraform_wrapper: false
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        terraform_wrapper: false
 
-  #   - name: Setup Terraform backend variables
-  #     working-directory: ./deploy
-  #     id: backend
-  #     run: |-
-  #       cat > backend.tfvars <<EOF
-  #       access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-  #       secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-  #       EOF
-  #   # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-  #   - name: Terraform Init
-  #     run: terraform init --backend-config="backend.tfvars"
+    - name: Setup Terraform backend variables
+      working-directory: ./deploy
+      id: backend
+      run: |-
+        cat > backend.tfvars <<EOF
+        access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
+        secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        EOF
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init --backend-config="backend.tfvars"
 
-  #   - name: Setup Terraform variables
-  #     working-directory: ./terraform
-  #     id: vars
-  #     run: |-
-  #       cat > pipeline.tfvars <<EOF
-  #       access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
-  #       secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-  #       EOF
+    - name: Setup Terraform variables
+      working-directory: ./terraform
+      id: vars
+      run: |-
+        cat > pipeline.tfvars <<EOF
+        access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
+        secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        EOF
 
-  #   - name: Terraform Apply
-  #     id: apply
-  #     run: |
-  #       terraform apply --auto-approve --var-file=pipeline.tfvars
+    - name: Terraform Apply
+      id: apply
+      run: |
+        terraform apply --auto-approve --var-file=pipeline.tfvars
